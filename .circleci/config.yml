@@ -36,11 +36,11 @@ jobs:
       - run:
           name: Build and push Docker image
           command: |
-            if [ "${CIRCLE_JOB}" == "test" ]; then
+            if [ "${CIRCLE_JOB}" == "test" ]  && [ $CIRCLE_TEST_EXIT_CODE -eq 0 ]; then
               docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
               docker build -t m4-node-app .
-              docker tag m4-node-app $DOCKER_USERNAME/m4-node-app
-              docker push $DOCKER_USERNAME/m4-node-app
+              docker image tag m4-node-app:latest $DOCKER_USERNAME/m4-node-app
+              docker push $DOCKER_USERNAME/m4-node-app:latest
             else
               echo "Skipping Docker image push as test job failed."
             fi
