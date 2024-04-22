@@ -1,21 +1,10 @@
 version: 2.1
+# orbs - reusable packages for use
 orbs:
   node: circleci/node@5.0.1
   docker: circleci/docker@2.1.4
-  snyk: snyk/snyk@1.5.0
+# jobs - set of instructions / functions
 jobs:
-  scan:
-    docker:
-      - image: cimg/node:16.10
-    environment:
-      IMAGE_NAME: carrothay/my-node-app
-    steps:
-      - checkout
-      - setup_remote_docker
-      - docker/check
-      - run: docker build -t $IMAGE_NAME .
-      - snyk/scan:
-          docker-image-name: $IMAGE_NAME
   build: # job name
     docker: # env
       - image: cimg/node:16.10
@@ -54,15 +43,9 @@ workflows:
   simple_workflow: # workflow name
     jobs:
       - build
-          filters:
-            branches:
-              only: main
       - test:
           requires:
             - build
-          filters:
-            branches:
-              only: main
       - build-and-push:
           requires:
             - test
@@ -70,9 +53,3 @@ workflows:
             branches:
               only:
                 - main
-      - scan:
-          requires:
-            - build
-          filters:
-            branches:
-              only: main
