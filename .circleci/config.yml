@@ -26,16 +26,16 @@ jobs:
           npm run test
 
   publish:
-    executor: docker/docker
+    docker:
+      - image: cimg/node:16.10
     steps:
-      - setup_remote_docker
       - checkout
-      - docker/check
+      - setup_remote_docker
       - run: |
+          TAG=0.1.$CIRCLE_BUILD_NUM
           docker build -t carrothay/m4-node-app:latest .
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           docker push carrothay/m4-node-app:latest
-
   # deploy:
   #   docker:
   #     - image: cimg/node:16.10
