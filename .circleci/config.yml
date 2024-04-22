@@ -32,9 +32,12 @@ jobs:
       - checkout
       - docker/check
       - docker/build:
-          image: carrothay/education-space
+          image: carrothay/m4-node-app
+      - run:
+          name: Log in to Docker Hub
+          command: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
       - docker/push:
-          image: carrothay/education-space
+          image: carrothay/m4-node-app
   # deploy:
   #   docker:
   #     - image: cimg/node:16.10
